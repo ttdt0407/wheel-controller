@@ -28,13 +28,12 @@ include os/FreeRTOS/module.mk
 CPU 		= -mthumb -mcpu=cortex-m3
 DEFINES 	= -DSTM32F103xB
 
-GENERAL_FLAGS = -O0 						\
-				-g3 						\
+GENERAL_FLAGS = -O0 -g3 					\
 				-Wall 						\
 				-fdata-sections 			\
 				-ffunction-sections 		\
-				-MMD 						\
-				-MP							\
+				-MMD -MP				    \
+				--specs=nosys.specs			\
 				--specs=nano.specs  		\
 				-fsingle-precision-constant
 

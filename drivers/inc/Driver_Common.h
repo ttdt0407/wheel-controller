@@ -59,7 +59,7 @@ typedef struct _ARM_DRIVER_VERSION {
 
 /**
 \brief General power states
-*/ 
+*/
 typedef enum _ARM_POWER_STATE {
   ARM_POWER_OFF,                        ///< Power off: no operation possible
   ARM_POWER_LOW,                        ///< Low Power mode: retain state, detect and signal wake-up events

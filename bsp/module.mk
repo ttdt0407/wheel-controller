@@ -1,4 +1,4 @@
-INCLUDE		+= -I bsp/inc
+INCLUDE		+= -Ibsp/inc
 
 SRCS		+= bsp/src/servo.c    \
 			   bsp/src/h_bridge.c \

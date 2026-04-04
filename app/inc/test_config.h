@@ -15,16 +15,16 @@
 
 #define DELAY_TIME  5000000
 
-/****************************************************************
- * Enable test GPIO function
- ***************************************************************/
+/**
+ * @brief GPIO constant
+ */
 #define GPIO_TEST
-#define BLINK_LED_TEST
+// #define BLINK_LED_TEST
 #define BUTTON_INT_TEST
 
-/****************************************************************
- * Enable test Timer function
- ***************************************************************/
+/**
+ * @brief Timer constant
+ */
 #define TIMER_TEST
 
 

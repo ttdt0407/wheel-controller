@@ -7,7 +7,6 @@
 #####################################################################
 # Initiliaze syntax and processor
 #####################################################################
-
 .syntax unified
 .cpu cortex-m3
 .arch armv7-m
@@ -19,7 +18,6 @@
 #####################################################################
 # Vector table
 #####################################################################
-
 .section .vector,"a",%progbits
 .type vector_table, %object
 
@@ -94,7 +92,6 @@ vector_table:
 #####################################################################
 # Reset Handler
 #####################################################################
-
 .section .text.Reset_Handler
 .weak Reset_Handler
 .type Reset_Handler, %function
@@ -139,7 +136,6 @@ reset_bss_loop:
 #####################################################################
 # Default Handler
 #####################################################################
-
 Default_Handler:
 
 infinite_loop:
@@ -149,7 +145,6 @@ infinite_loop:
 #####################################################################
 # Alias for each exception handler to default handler
 #####################################################################
-
 	.weak NMI_Handler
 	.thumb_set NMI_Handler,Default_Handler
 

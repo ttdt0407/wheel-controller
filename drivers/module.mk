@@ -1,9 +1,8 @@
-INCLUDE	+= -I drivers/inc
-INCLUDE += -I drivers/core/inc
+INCLUDE	+= -Idrivers/inc
+INCLUDE += -Idrivers/core/inc
 
 
-SRCS += drivers/src/Driver_CAN.c   \
-		drivers/src/Driver_Flash.c \
+SRCS += drivers/src/Driver_Flash.c \
 		drivers/src/Driver_GPIO.c  \
 		drivers/src/Driver_USART.c \
 		drivers/src/Driver_RCC.c   \

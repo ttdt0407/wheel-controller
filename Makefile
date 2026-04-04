@@ -18,7 +18,7 @@ OBJDUMP		= $(PREFIX)objdump
 
 SRCS		=
 INCLUDE		=
-ASM_SRCS	= startup/my_startup_code.s
+ASM_SRCS	= my_startup_code.s
 
 include app/module.mk
 include bsp/module.mk
@@ -41,7 +41,7 @@ CFLAGS  = $(CPU) $(DEFINES) $(INCLUDE) $(GENERAL_FLAGS) -std=c99 -MF"$(@:%.o=%.d
 CXXFLAGS = $(CPU) $(DEFINES) $(INCLUDE) $(GENERAL_FLAGS) -std=c++11 -MF"$(@:%.o=%.d)"
 
 LDFLAGS = $(CPU)									\
-		 -Tlinker/my_linker_script.ld 				\
+		 -Tmy_linker_script.ld 				\
 		 -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref	\
 		 -Wl,--gc-sections
 
@@ -53,21 +53,21 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).bin print_size
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJS) $(ASM_OBJS)
 	@echo "[LINK] $@"
-	@$(CC) $^ $(LDFLAGS) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf
 	@echo "[BIN] $@"
-	@$(OBJCOPY) -O binary $< $@
+	$(OBJCOPY) -O binary $< $@
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@echo "[CC] $<"
-	@$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s
 	@mkdir -p $(dir $@)
 	@echo "[AS] $<"
-	@$(AS) -c $(CFLAGS) $< -o $@
+	$(AS) -c $(CFLAGS) $< -o $@
 
 print_size: $(BUILD_DIR)/$(TARGET).elf
 	@echo ""

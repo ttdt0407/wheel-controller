@@ -1,12 +1,12 @@
 /**
- * @file Driver_GPIO.c
- * @author Tien Ta (Email: tien.ta.eswe@gmail.com)
- * @brief Driver for GPIO with these function:
- *        - Register Callback for interrupt.
- *        - Read status of pin.
- *        - Write value to pin.
- *        - Config Output mode push/pull or open drain.
- *        - Config Input mode pullup/pulldown.
+ * @file    Driver_GPIO.c
+ * @author  Tien Ta (Email: tien.ta.eswe@gmail.com)
+ * @brief   Driver for GPIO with these function:
+ *          - Register Callback for interrupt.
+ *          - Read status of pin.
+ *          - Write value to pin.
+ *          - Config Output mode push/pull or open drain.
+ *          - Config Input mode pullup/pulldown.
  * @version 0.1
  * @date 2026-04-04
  *
@@ -26,7 +26,6 @@
 /********************************************************************
 * Definitions
 ********************************************************************/
-
 typedef struct
 {
   GPIO_TypeDef *gpio;
@@ -42,7 +41,6 @@ static GPIO_TypeDef *gpio_exti_active_port[PINS_OF_PORT];
 /********************************************************************
 * Helper function
 ********************************************************************/
-
 /**
  * @brief Reset value of GPIO struct.
  *
@@ -71,7 +69,6 @@ static void GPIO_ConvertPin(ARM_GPIO_Pin_t pin, GPIO_t *my_gpio)
 /********************************************************************
 * GPIO Driver Function
 ********************************************************************/
-
 /**
  * @brief Set up GPIO interface.
  *

@@ -27,7 +27,6 @@ static void delay(uint32_t time) {
 }
 
 void test_can_run(void) {
-    // Chỉ Initialize Console cho MASTER (vì bạn chỉ có 1 mạch UART to TTL)
 #if CURRENT_NODE_ROLE == NODE_ROLE_MASTER
     console_init();
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -87,8 +86,7 @@ void test_can_run(void) {
     }
 
 #elif CURRENT_NODE_ROLE == NODE_ROLE_SLAVE
-    // SLAVE chạy hoàn toàn ẩn (không in Log qua UART)
-    
+
     while (1) {
         ARM_CAN_MSG_INFO rx_info = {0};
         uint8_t rx_data[8] = {0};

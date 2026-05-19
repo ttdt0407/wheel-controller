@@ -1,47 +1,20 @@
-/**
- * @file bsp_can.h
- * @brief Simple BSP layer for CAN bus
- */
-
-#ifndef BSP_CAN_H_
-#define BSP_CAN_H_
+#ifndef BSP_CAN_H
+#define BSP_CAN_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef struct {
+    uint32_t id;
+    uint8_t  data[8];
+    uint8_t  dlc;
+    uint8_t  isExt;
+    uint8_t  isRTR;
+    uint8_t  reserved;
+} CAN_Message_t;
 
-/**
- * @brief Initialize CAN bus
- * 
- * @param bitrate   Desired bitrate (e.g., 500000)
- */
-void BSP_CAN_Init(uint32_t bitrate);
+void BSP_CAN_Init(void);
+bool BSP_CAN_Write(CAN_Message_t *msg, uint32_t timeout_ms);
+bool BSP_CAN_Read(CAN_Message_t *msg, uint32_t timeout_ms);
 
-/**
- * @brief Send a CAN message (Standard ID)
- * 
- * @param id        Standard ID
- * @param data      Pointer to data payloadCanSend
- * @param dlc       Data length code (0-8)
- * @return int32_t  Number of bytes sent, or error code (< 0)
- */
-int32_t BSP_CAN_Send(uint32_t id, const uint8_t *data, uint8_t dlc);
-
-/**
- * @brief Receive a CAN message from FIFO0
- * 
- * @param id        Output CAN identifier
- * @param data      Buffer to store payload
- * @param size      Maximum buffer size
- * @return int32_t  Number of bytes received, 0 if no message, or error code (< 0)
- */
-int32_t BSP_CAN_Receive(uint32_t *id, uint8_t *data, uint8_t size);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* BSP_CAN_H_ */
+#endif /* BSP_CAN_H */

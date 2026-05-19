@@ -1,4 +1,3 @@
-#include "main.h"
 #include "test_config.h"
 #include "test_gpio.h"
 #include "test_timer.h"

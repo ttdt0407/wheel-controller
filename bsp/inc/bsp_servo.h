@@ -1,10 +1,5 @@
-/**
- * @file bsp_servo.h
- * @brief BSP Servo API (stub)
- */
-
-#ifndef BSP_SERVO_H_
-#define BSP_SERVO_H_
+#ifndef BSP_SERVO_H
+#define BSP_SERVO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,10 +8,10 @@ extern "C" {
 #include <stdint.h>
 
 void BSP_Servo_Init(void);
-void BSP_Servo_SetAngle(uint8_t angle);
+void BSP_Servo_SetAngle(uint8_t angle_degrees);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* BSP_SERVO_H_ */
+#endif /* BSP_SERVO_H */

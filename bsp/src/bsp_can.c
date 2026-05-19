@@ -1,58 +1,101 @@
 #include "bsp_can.h"
 #include "Driver_CAN.h"
-#include <stddef.h>
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
+#include <string.h>
 
 extern ARM_DRIVER_CAN Driver_CAN0;
 
-// CAN Event Callback
-static void CAN_SignalEvent(uint32_t obj_idx, uint32_t event) {
-    // Custom logic to handle event, such as giving a semaphore or queueing RX data
-    if (event == ARM_CAN_EVENT_RECEIVE) {
-        // Can be handled here
-    }
-}
+static QueueHandle_t     RX_Queue     = NULL;
+static QueueHandle_t     TX_Queue     = NULL;
+static SemaphoreHandle_t TX_Semaphore = NULL;
+static TaskHandle_t      TX_TaskHandle = NULL;
 
-void BSP_CAN_Init(uint32_t bitrate) {
-    // 1. Initialize CAN Driver
-    Driver_CAN0.Initialize(NULL, CAN_SignalEvent);
+static void CAN_TX_Task(void *argument);
 
-    // 2. Power on
+void BSP_CAN_SignalObjectEvent(uint32_t obj_idx, uint32_t event);
+
+void BSP_CAN_Init(void) {
+
+    RX_Queue = xQueueCreate(10, sizeof(CAN_Message_t));
+    TX_Queue = xQueueCreate(10, sizeof(CAN_Message_t));
+
+    TX_Semaphore = xSemaphoreCreateBinary();
+
+    xSemaphoreGive(TX_Semaphore);
+
+    Driver_CAN0.Initialize(NULL, BSP_CAN_SignalObjectEvent);
     Driver_CAN0.PowerControl(ARM_POWER_FULL);
-
-    // 3. Set Bitrate
-    Driver_CAN0.SetMode(ARM_CAN_MODE_INITIALIZATION);
-    Driver_CAN0.SetBitrate(ARM_CAN_BITRATE_NOMINAL, bitrate, 0);
-
-    // 4. Configure Filter to accept everything on Standard ID
-    Driver_CAN0.ObjectSetFilter(0, ARM_CAN_FILTER_ID_MASKABLE_ADD, 0x000, 0x000);
-
-    // 5. Configure RX/TX Objects
-    // For STM32F1, Mailbox 0 is often used for TX, FIFO0 for RX
-    Driver_CAN0.ObjectConfigure(0, ARM_CAN_OBJ_TX); // Enable TX Interrupt
-    Driver_CAN0.ObjectConfigure(1, ARM_CAN_OBJ_RX); // Enable RX Interrupt
-
-    // 6. Enter Normal Mode
+    Driver_CAN0.SetBitrate(ARM_CAN_BITRATE_NOMINAL, 500000, 0);
+    Driver_CAN0.ObjectSetFilter(3, ARM_CAN_FILTER_ID_EXACT_ADD, 0, 0);
+    Driver_CAN0.ObjectConfigure(3, ARM_CAN_OBJ_RX);
     Driver_CAN0.SetMode(ARM_CAN_MODE_NORMAL);
+
+    xTaskCreate(CAN_TX_Task, "CAN_TX", configMINIMAL_STACK_SIZE + 64, NULL, 1, &TX_TaskHandle);
 }
 
-int32_t BSP_CAN_Send(uint32_t id, const uint8_t *data, uint8_t dlc) {
-    ARM_CAN_MSG_INFO msg_info = {0};
-    msg_info.id = id;
-    msg_info.rtr = 0;
+bool BSP_CAN_Write(CAN_Message_t *msg, uint32_t timeout_ms) {
+    if (TX_Queue == NULL) return false;
 
-    return Driver_CAN0.MessageSend(0, &msg_info, data, dlc);
+    BaseType_t status = xQueueSend(TX_Queue, msg, pdMS_TO_TICKS(timeout_ms));
+    return (status == pdPASS);
 }
 
-int32_t BSP_CAN_Receive(uint32_t *id, uint8_t *data, uint8_t size) {
-    if (id == NULL || data == NULL) {
-        return ARM_DRIVER_ERROR_PARAMETER;
+bool BSP_CAN_Read(CAN_Message_t *msg, uint32_t timeout_ms) {
+    if (RX_Queue == NULL) return false;
+
+    BaseType_t status = xQueueReceive(RX_Queue, msg, pdMS_TO_TICKS(timeout_ms));
+    return (status == pdPASS);
+}
+
+void BSP_CAN_SignalObjectEvent(uint32_t obj_idx, uint32_t event) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    if (event == ARM_CAN_EVENT_RECEIVE) {
+        ARM_CAN_MSG_INFO msg_info;
+    memset(&msg_info, 0, sizeof(msg_info));
+        CAN_Message_t rx_msg;
+
+        int32_t bytes_read = Driver_CAN0.MessageRead(obj_idx, &msg_info, rx_msg.data, 8);
+
+        if (bytes_read >= 0) {
+            rx_msg.id = msg_info.id & 0x1FFFFFFF;
+            rx_msg.dlc = (uint8_t)bytes_read;
+            rx_msg.isExt = (msg_info.id & ARM_CAN_ID_IDE_Msk) ? 1 : 0;
+            rx_msg.isRTR = (msg_info.rtr) ? 1 : 0;
+
+            xQueueSendFromISR(RX_Queue, &rx_msg, &xHigherPriorityTaskWoken);
+        }
     }
 
-    ARM_CAN_MSG_INFO msg_info = {0};
-    int32_t result = Driver_CAN0.MessageRead(1, &msg_info, data, size);
-    if (result > 0) {
-        *id = msg_info.id;
+    if (event == ARM_CAN_EVENT_SEND_COMPLETE) {
+        xSemaphoreGiveFromISR(TX_Semaphore, &xHigherPriorityTaskWoken);
     }
 
-    return result;
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+
+static void CAN_TX_Task(void *argument) {
+    CAN_Message_t tx_msg;
+    ARM_CAN_MSG_INFO msg_info;
+    memset(&msg_info, 0, sizeof(msg_info));
+    uint8_t target_mailbox = 0;
+    while(1) {
+        if (xQueueReceive(TX_Queue, &tx_msg, portMAX_DELAY) == pdPASS) {
+
+            msg_info.id = tx_msg.id;
+            if (tx_msg.isExt) msg_info.id |= ARM_CAN_ID_IDE_Msk;
+            if (tx_msg.isRTR) msg_info.rtr = 1;
+            xSemaphoreTake(TX_Semaphore, portMAX_DELAY);
+            int32_t result = Driver_CAN0.MessageSend(target_mailbox, &msg_info, tx_msg.data, tx_msg.dlc);
+
+            if (result < 0) {
+                xSemaphoreGive(TX_Semaphore);
+            } else {
+                target_mailbox = (target_mailbox + 1) % 3;
+            }
+        }
+    }
 }

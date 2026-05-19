@@ -21,7 +21,7 @@ typedef struct {
 bool rb_init(ring_buffer_t *rb, uint8_t *data, uint16_t len);
 bool rb_is_empty(ring_buffer_t *rb);
 bool rb_is_full(ring_buffer_t *rb);
-bool rb_get(ring_buffer_t *rb);
+bool rb_get(ring_buffer_t *rb, uint8_t *data);
 bool rb_put(ring_buffer_t *rb, uint8_t data);
 
 

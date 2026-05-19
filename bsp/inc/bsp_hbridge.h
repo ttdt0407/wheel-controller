@@ -1,10 +1,5 @@
-/**
- * @file bsp_hbridge.h
- * @brief BSP H-Bridge API (stub)
- */
-
-#ifndef BSP_HBRIDGE_H_
-#define BSP_HBRIDGE_H_
+#ifndef BSP_HBRIDGE_H
+#define BSP_HBRIDGE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,11 +7,11 @@ extern "C" {
 
 #include <stdint.h>
 
-void BSP_HBridge_Init(void);
-void BSP_HBridge_SetSpeed(float percentage);
+void BSP_Motor_Init(void);
+void BSP_Motor_SetSpeed(int8_t speed_percent);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* BSP_HBRIDGE_H_ */
+#endif /* BSP_HBRIDGE_H */

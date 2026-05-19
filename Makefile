@@ -22,7 +22,7 @@ ASM_SRCS	= my_startup_code.s
 include app/module.mk
 include bsp/module.mk
 include drivers/module.mk
-include os/FreeRTOS/module.mk
+include os/module.mk
 
 CPU 		= -mthumb -mcpu=cortex-m3
 DEFINES 	= -DSTM32F103xB

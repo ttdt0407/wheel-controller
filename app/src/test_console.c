@@ -1,5 +1,5 @@
 #include "test_console.h"
-#include "bsp_console.h"
+#include "bsp_log.h"
 #include "test_config.h"
 
 #include "test_gpio.h"
@@ -10,35 +10,46 @@
 #include "Driver_RCC.h"
 
 #include <stdio.h>
+#include "cmsis_os2.h"
 
 extern ARM_DRIVER_GPIO Driver_GPIO0;
 extern ARM_DRIVER_RCC Driver_RCC0;
 
-/**
- * @brief Software delay
- */
-static void delay(uint32_t time) {
-    while (time--) {
-        __asm("nop");
+static void vTestConsoleTask(void *argument) {
+    (void)argument;
+
+    while (1) {
+        bsp_log_printf("Hello heo Peppa <3\r\n");
+        osDelay(500);
     }
 }
 
 void test_console_run(void) {
+    Driver_RCC0.SetSystemClock();
+    SystemCoreClockUpdate();
+
     RCC_GPIOC_CLK_EN();
     Driver_GPIO0.Setup(LED, NULL);
     Driver_GPIO0.SetDirection(LED, ARM_GPIO_OUTPUT);
     Driver_GPIO0.SetOutputMode(LED, ARM_GPIO_PUSH_PULL);
 
-    BSP_Console_Init();
-
     // Disable stdout buffering for embedded systems
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    // 2. Vòng lặp test in liên tục
-    while (1) {
+    osKernelInitialize();
 
-        printf("Hello heo Peppa <3\r\n");
+    bsp_log_init();
 
-        delay(50000);
-    }
+    const osThreadAttr_t task_attr = {
+        .name = "TestConsole_Task",
+        .priority = osPriorityNormal,
+        .stack_size = 2048
+    };
+    osThreadNew(vTestConsoleTask, NULL, &task_attr);
+
+    // Start RTOS scheduler
+    osKernelStart();
+
+    // Should never reach here
+    while (1) {}
 }

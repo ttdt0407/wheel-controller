@@ -1,7 +1,6 @@
 INC += -Ios/FreeRTOS/include
 INC += -Ios/FreeRTOS/portable/GCC/ARM_CM3
 
-
 SRCS +=	os/FreeRTOS/croutine.c					\
 		os/FreeRTOS/event_groups.c  			\
 		os/FreeRTOS/list.c          			\

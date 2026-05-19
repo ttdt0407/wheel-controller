@@ -1,57 +1,12 @@
-/*
- * Copyright (c) 2013-2020 ARM Limited. All rights reserved.
- *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the License); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an AS IS BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * $Date:        31. March 2020
- * $Revision:    V2.4
- *
- * Project:      USART (Universal Synchronous Asynchronous Receiver Transmitter)
- *               Driver definitions
- */
-
-/* History:
- *  Version 2.4
- *    Removed volatile from ARM_USART_STATUS and ARM_USART_MODEM_STATUS
- *  Version 2.3
- *    ARM_USART_STATUS and ARM_USART_MODEM_STATUS made volatile
- *  Version 2.2
- *    Corrected ARM_USART_CPOL_Pos and ARM_USART_CPHA_Pos definitions
- *  Version 2.1
- *    Removed optional argument parameter from Signal Event
- *  Version 2.0
- *    New simplified driver:
- *      complexity moved to upper layer (especially data handling)
- *      more unified API for different communication interfaces
- *      renamed driver UART -> USART (Asynchronous & Synchronous)
- *    Added modes:
- *      Synchronous
- *      Single-wire
- *      IrDA
- *      Smart Card
- *    Changed prefix ARM_DRV -> ARM_DRIVER
- *  Version 1.10
- *    Namespace prefix ARM_ added
- *  Version 1.01
- *    Added events:
- *      ARM_UART_EVENT_TX_EMPTY,     ARM_UART_EVENT_RX_TIMEOUT
- *      ARM_UART_EVENT_TX_THRESHOLD, ARM_UART_EVENT_RX_THRESHOLD
- *    Added functions: SetTxThreshold, SetRxThreshold
- *    Added "rx_timeout_event" to capabilities
- *  Version 1.00
- *    Initial release
+/**
+ * @file Driver_USART.h
+ * @author Dinh Tien (tien.ta.eswe@gmail.com)
+ * @brief API for USART driver for stm32f103c8t6
+ * @version 0.1
+ * @date 2026-05-17
+ * 
+ * @copyright Copyright (c) 2026
+ * 
  */
 
 #ifndef DRIVER_USART_H_

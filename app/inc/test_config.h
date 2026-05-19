@@ -20,12 +20,6 @@
 #define BLINK_LED_TEST      DISABLE
 #define BUTTON_INT_TEST     DISABLE
 
-/**
- * @brief Timer constant
- */
-#define TIMER_TEST          DISABLE
-#define CONTROL_MOTOR_TEST  DISABLE
-#define ENCODER_MOTOR_TEST  DISABLE
 
 /**
  * @brief Console constant
@@ -35,6 +29,14 @@
 /**
  * @brief Console constant
  */
-#define CAN_TEST            ENABLE
+#define CAN_TEST            DISABLE
+
+/**
+ * @brief Timer constant
+ */
+#define TIMER_TEST          ENABLE
+#define CONTROL_MOTOR_TEST  ENABLE
+#define ENCODER_MOTOR_TEST  ENABLE
+#define SERVO_MOTOR_TEST    ENABLE
 
 #endif /* TEST_CONFIG_H */

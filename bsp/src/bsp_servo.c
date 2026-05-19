@@ -1,11 +1,31 @@
 #include "bsp_servo.h"
+#include "bsp_config.h"
+#include "Driver_Timer.h"
+#include "Driver_GPIO.h"
+#include <stddef.h>
 
-// Minimal servo stub. Replace with hardware-specific implementation.
+extern ARM_DRIVER_TIM_PWM Driver_TIM0;
+extern ARM_DRIVER_GPIO    Driver_GPIO0;
+
 void BSP_Servo_Init(void) {
-    // TODO: configure timer for 50Hz PWM and set default position
+    Driver_GPIO0.Setup(SERVO_PWM_PIN, NULL);
+    Driver_GPIO0.SetDirection(SERVO_PWM_PIN, ARM_GPIO_AF_OUTPUT);
+    Driver_GPIO0.SetOutputMode(SERVO_PWM_PIN, ARM_AFIO_PUSH_PULL);
+
+    Driver_TIM0.Setup(ARM_TIM_4, SERVO_FREQ);
+    Driver_TIM0.SetMode(ARM_TIM_4, ARM_CHANNEL_1);
+    Driver_TIM0.Trigger(ARM_TIM_4, ARM_CHANNEL_1);
+
+    BSP_Servo_SetAngle(90U);
 }
 
-void BSP_Servo_SetAngle(uint8_t angle) {
-    // angle: 0..180 -> map to 0.5ms..2.5ms
-    (void)angle;
+void BSP_Servo_SetAngle(uint8_t angle_degrees) {
+    uint16_t duty_scaled;
+
+    if (angle_degrees > 180U) {
+        angle_degrees = 180U;
+    }
+
+    duty_scaled = 500U + (uint16_t)(((uint32_t)angle_degrees * 500U) / 180U);
+    Driver_TIM0.SetDuty(ARM_TIM_4, ARM_CHANNEL_1, duty_scaled);
 }

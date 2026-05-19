@@ -1,6 +1,6 @@
 /**
  * @file ring_buffer.c
- * @author Tien Ta (tien.ta.eswe@gmail.com)
+ * @author Dinh Tien (tien.ta.eswe@gmail.com)
  * @brief Basic ring buffer (get 1 byte - put 1 byte)
  * @version 0.1
  * @date 2026-05-17
@@ -10,7 +10,6 @@
  */
 
 #include "ring_buffer.h"
-
 
 bool rb_init(ring_buffer_t *rb, uint8_t *data, uint16_t len) {
     if (rb == NULL || data == NULL) {

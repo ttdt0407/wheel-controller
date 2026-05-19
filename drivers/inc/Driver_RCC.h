@@ -29,8 +29,8 @@
 #define RCC_TIM4_CLK_EN()           (RCC->APB1ENR |= (1U << RCC_APB1ENR_TIM4EN_Pos))
 
 #define RCC_USART1_EN()            (RCC->APB2ENR |= (1U << RCC_APB2ENR_USART1EN_Pos))
-#define RCC_USART2_EN()            (RCC->APB1ENR |= (1U << RCC_APB1ENR_USART2EN_Pos))
-#define RCC_USART3_EN()            (RCC->APB1ENR |= (1U << RCC_APB1ENR_USART3EN_Pos))
+// #define RCC_USART2_EN()            (RCC->APB1ENR |= (1U << RCC_APB1ENR_USART2EN_Pos))
+// #define RCC_USART3_EN()            (RCC->APB1ENR |= (1U << RCC_APB1ENR_USART3EN_Pos))
 
 typedef struct
 {

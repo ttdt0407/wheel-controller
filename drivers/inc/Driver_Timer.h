@@ -42,7 +42,7 @@ typedef struct
 {
     int32_t (*Setup)   (ARM_TIM_NUM tim, uint16_t freq_hz);
     int32_t (*SetMode) (ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel);
-    int32_t (*SetDuty) (ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel, uint8_t duty);
+    int32_t (*SetDuty) (ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel, uint16_t duty);
     int32_t (*Trigger) (ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel);
 } ARM_DRIVER_TIM_PWM;
 

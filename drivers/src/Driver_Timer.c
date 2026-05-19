@@ -132,8 +132,9 @@ static int32_t TIM_PWM_SetMode(ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel) {
 
 /**
  * @brief Set duty cycle for PWM.
+ * @param duty: 0 to 10000 (represents 0.00% to 100.00%)
  */
-static int32_t TIM_PWM_SetDuty(ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel, uint8_t duty) {
+static int32_t TIM_PWM_SetDuty(ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel, uint16_t duty) {
     int32_t result = ARM_DRIVER_OK;
     uint32_t load_val;
     TIM_t my_tim;
@@ -143,7 +144,11 @@ static int32_t TIM_PWM_SetDuty(ARM_TIM_NUM tim, ARM_TIM_CHANNEL channel, uint8_t
         return result;
     }
 
-   load_val = (uint32_t)((duty * (my_tim.tim->ARR + 1)) / 100);
+    if (duty > 10000) {
+        duty = 10000;
+    }
+
+    load_val = (uint32_t)(((uint32_t)duty * (my_tim.tim->ARR + 1)) / 10000);
 
     switch (channel) {
         case ARM_CHANNEL_1:

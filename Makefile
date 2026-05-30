@@ -55,29 +55,29 @@ ASM_OBJS = $(addprefix $(BUILD_DIR)/, $(ASM_SRCS:.s=.o))
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).bin print_size
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJS) $(ASM_OBJS)
-	@echo "[LINK] $@"
-	$(CC) $^ $(LDFLAGS) -o $@
+	@echo "[LINK]		$@"
+	@$(CC) $^ $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf
-	@echo "[BIN] $@"
-	$(OBJCOPY) -O binary $< $@
+	@echo "[BIN]		$@"
+	@$(OBJCOPY) -O binary $< $@
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	@echo "[CC] $<"
-	$(CC) -c $(CFLAGS) $< -o $@
+	@echo "[CC]		$<"
+	@$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s
 	@mkdir -p $(dir $@)
-	@echo "[AS] $<"
-	$(AS) -c $(CFLAGS) $< -o $@
+	@echo "[AS]		$<"
+	@$(AS) -c $(CFLAGS) $< -o $@
 
 print_size: $(BUILD_DIR)/$(TARGET).elf
 	@echo ""
 	@$(SZ) $<
 
 clean:
-	@echo "[CLEAN] Remove directory: $(BUILD_DIR)"
+	@echo "[CLEAN]		$(BUILD_DIR)"
 	@rm -rf $(BUILD_DIR)
 
 flash: all

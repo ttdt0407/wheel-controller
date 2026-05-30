@@ -306,9 +306,10 @@ static ARM_USART_MODEM_STATUS ARM_USART_GetModemStatus(void)
     return usart1_ctx.modem_status;
 }
 
-static void ARM_USART_SignalEvent(uint32_t event)
+__attribute__((unused)) static void ARM_USART_SignalEvent(uint32_t event)
 {
     // function body
+    (void)event;
 }
 
 void USART1_IRQHandler(void) {

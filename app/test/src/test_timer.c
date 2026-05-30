@@ -16,9 +16,9 @@ extern ARM_DRIVER_GPIO Driver_GPIO0;
 
 static void vMotorServoTask(void *argument) {
     (void)argument;
-    int8_t speed = 0;
+    int16_t speed = 0;
     int8_t speed_step = 10;
-    uint8_t angle = 90;
+    int16_t angle = 90;
     uint8_t angle_step = 10;
 
     bsp_log_printf("[INFO] Motor & Servo Test Task Started.\r\n");

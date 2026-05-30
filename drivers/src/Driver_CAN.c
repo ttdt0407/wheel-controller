@@ -124,6 +124,9 @@ static int32_t ARM_CAN_PowerControl (ARM_POWER_STATE state) {
       CAN1->MCR &= ~CAN_MCR_SLEEP;
       NVIC_ClearPendingIRQ(USB_HP_CAN1_TX_IRQn);
       CAN1->IER |= CAN_IER_FMPIE0 | CAN_IER_TMEIE;
+      // Priority phải >= 5 (để an toàn với FreeRTOS)
+      NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, 5);
+      NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 5);
       NVIC_EnableIRQ(USB_HP_CAN1_TX_IRQn);
       NVIC_ClearPendingIRQ(USB_LP_CAN1_RX0_IRQn);
       NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
@@ -390,6 +393,8 @@ static ARM_CAN_STATUS ARM_CAN_GetStatus (void) {
 
   // Add code to return device bus and error status
   // ..
+  ARM_CAN_STATUS ret = {0};
+  return ret;
 }
 
 

@@ -34,9 +34,9 @@
 /**
  * @brief Timer constant
  */
-#define TIMER_TEST          ENABLE
-#define CONTROL_MOTOR_TEST  ENABLE
-#define ENCODER_MOTOR_TEST  ENABLE
-#define SERVO_MOTOR_TEST    ENABLE
+#define TIMER_TEST          DISABLE
+#define CONTROL_MOTOR_TEST  DISABLE
+#define ENCODER_MOTOR_TEST  DISABLE
+#define SERVO_MOTOR_TEST    DISABLE
 
 #endif /* TEST_CONFIG_H */

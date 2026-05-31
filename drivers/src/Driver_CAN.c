@@ -1,6 +1,6 @@
 /**
  * @file Driver_CAN.c
- * @author Dinh Tien (tien.ta.eswe@gmail.com)
+ * @author dt (tien.ta.eswe@gmail.com)
  * @brief CMSIS CAN driver
  * @version 0.1
  * @date 2026-05-18

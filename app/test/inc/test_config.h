@@ -2,8 +2,7 @@
 #define TEST_CONFIG_H
 
 #include "test_gpio.h"
-#include "test_timer.h"
-#include "test_console.h"
+#include "test_log.h"
 
 #include "bsp_config.h"
 
@@ -12,6 +11,10 @@
 #include "Driver_Timer.h"
 
 #include "system_stm32f1xx.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /**
  * @brief GPIO constant
@@ -22,21 +25,28 @@
 
 
 /**
- * @brief Console constant
+ * @brief Log test
  */
-#define CONSOLE_TEST        DISABLE
+#define LOG_TEST            DISABLE
 
 /**
- * @brief Console constant
+ * @brief CAN test
  */
 #define CAN_TEST            DISABLE
 
 /**
- * @brief Timer constant
+ * @brief Timer test
  */
-#define TIMER_TEST          DISABLE
-#define CONTROL_MOTOR_TEST  DISABLE
-#define ENCODER_MOTOR_TEST  DISABLE
-#define SERVO_MOTOR_TEST    DISABLE
+#define SERVO_TEST          DISABLE
+
+/**
+ * @brief MOTOR test
+ * 
+ */
+#define MOTOR_TEST          ENABLE
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* TEST_CONFIG_H */

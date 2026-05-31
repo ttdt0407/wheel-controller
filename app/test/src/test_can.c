@@ -1,3 +1,13 @@
+/**
+ * @file test_can.c
+ * @author dt (tien.ta.eswe@gmail.com)
+ * @brief testing can driver module
+ * @version 0.1
+ * @date 2026-05-31
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "test_can.h"
 #include "test_config.h"
 

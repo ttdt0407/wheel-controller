@@ -1,6 +1,6 @@
 /**
  * @file Driver_USART.c
- * @author Dinh Tien (tien.ta.eswe@gmail.com)
+ * @author dt (tien.ta.eswe@gmail.com)
  * @brief Implementation of USART driver for stm32f103c8t6
  * @version 0.1
  * @date 2026-05-17
@@ -313,18 +313,26 @@ __attribute__((unused)) static void ARM_USART_SignalEvent(uint32_t event)
 }
 
 void USART1_IRQHandler(void) {
-    if (((USART1->SR & (1 << USART_SR_TXE_Pos)) >> USART_SR_TXE_Pos) && ((USART1->CR1 & (1 << USART_CR1_TXEIE_Pos)) >> USART_CR1_TXEIE_Pos)) {
-        uint8_t data;
+    uint32_t sr = USART1->SR;
+    uint32_t cr1 = USART1->CR1;
 
+    if ((sr & USART_SR_TXE) && (cr1 & USART_CR1_TXEIE)) {
+        uint8_t data;
         if (rb_get(&usart1_tx_rb, &data)) {
             USART1->DR = data;
         }
-        else
-        {
+        else {
             USART1->CR1 &= ~(1 << USART_CR1_TXEIE_Pos);
-            if (cb_ev != NULL) {
-                cb_ev(ARM_USART_EVENT_TX_COMPLETE);
-            }
+            USART1->CR1 |= (1 << USART_CR1_TCIE_Pos);
+        }
+    }
+
+    if ((sr & USART_SR_TC) && (cr1 & USART_CR1_TCIE)) {
+        USART1->CR1 &= ~(1 << USART_CR1_TCIE_Pos);
+        USART1->SR &= ~(1 << USART_SR_TC_Pos);
+
+        if (cb_ev != NULL) {
+            cb_ev(ARM_USART_EVENT_TX_COMPLETE);
         }
     }
 }

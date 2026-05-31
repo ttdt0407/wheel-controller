@@ -3,7 +3,7 @@
 # @date  : 25/03/2026
 #####################################################################
 
-TARGET 		= my_project
+TARGET 		= wheel_controller
 BUILD_DIR 	= build
 
 PREFIX 		= arm-none-eabi-

@@ -1,6 +1,6 @@
 /**
  * @file    Driver_GPIO.c
- * @author  Tien Ta (tien.ta.eswe@gmail.com)
+ * @author  dt (tien.ta.eswe@gmail.com)
  * @brief   Driver for GPIO with these function:
  *          - Register Callback for interrupt.
  *          - Read status of pin.

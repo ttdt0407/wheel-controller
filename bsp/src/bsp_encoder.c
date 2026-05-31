@@ -1,3 +1,13 @@
+/**
+ * @file bsp_encoder.c
+ * @author dt (tien.ta.eswe@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2026-05-30
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "bsp_encoder.h"
 
 #include "bsp_encoder.h"

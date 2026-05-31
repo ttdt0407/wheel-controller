@@ -1,8 +1,9 @@
 #include "test_config.h"
 #include "test_gpio.h"
-#include "test_timer.h"
-#include "test_console.h"
+#include "test_log.h"
 #include "test_can.h"
+#include "test_servo.h"
+#include "test_motor.h"
 
 #include "cmsis_os2.h"
 
@@ -17,6 +18,10 @@
 
 int main(void) {
     __enable_irq();
+
+    /* Init servo, hbrige, encoder, can, log before testing each module */
+    BSP_Init();
+
     #if (GPIO_TEST == ENABLE)
     test_gpio_run();
     #endif
@@ -25,14 +30,21 @@ int main(void) {
     test_timer_run();
     #endif
 
-    #if (CONSOLE_TEST == ENABLE)
-    test_console_run();
+    #if (LOG_TEST == ENABLE)
+    test_log_run();
     #endif
 
     #if (CAN_TEST == ENABLE)
     test_can_run();
     #endif
 
+    #if (SERVO_TEST == ENABLE)
+    test_servo_run();
+    #endif
+
+    #if (MOTOR_TEST == ENABLE)
+    test_motor_run();
+    #endif
 
     return 0;
 }

@@ -1,3 +1,13 @@
+/**
+ * @file test_gpio.c
+ * @author dt (tien.ta.eswe@gmail.com)
+ * @brief testing gpio driver module
+ * @version 0.1
+ * @date 2026-05-31
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "test_gpio.h"
 #include "test_config.h"
 
@@ -37,10 +47,6 @@ void button_callback(ARM_GPIO_Pin_t pin, uint32_t event) {
  * @brief Test GPIO output.
  */
 static void test_blink_led() {
-    RCC_GPIOC_CLK_EN();
-    Driver_GPIO0.Setup(LED, NULL);
-    Driver_GPIO0.SetDirection(LED, ARM_GPIO_OUTPUT);
-    Driver_GPIO0.SetOutputMode(LED, ARM_GPIO_PUSH_PULL);
 
     while (1) {
         Driver_GPIO0.SetOutput(LED, ON);
@@ -76,8 +82,6 @@ static void test_button_int() {
  * @brief Test GPIO.
  */
 void test_gpio_run(void) {
-    Driver_RCC0.SetSystemClock();
-    SystemCoreClockUpdate();
 
 #ifdef BLINK_LED_TEST
     test_blink_led();

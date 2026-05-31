@@ -1,3 +1,14 @@
+/**
+ * @file bsp_can.c
+ * @author dt (tien.ta.eswe@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2026-05-30
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+
 #include "bsp_can.h"
 #include "Driver_CAN.h"
 #include "FreeRTOS.h"

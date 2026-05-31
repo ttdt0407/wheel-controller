@@ -1,3 +1,13 @@
+/**
+ * @file bsp_log.c
+ * @author dt (tien.ta.eswe@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2026-05-30
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "bsp_log.h"
 #include "Driver_USART.h"
 #include "cmsis_os2.h"
@@ -45,19 +55,11 @@ static void vLoggingTask(void *argument) {
     while(1) {
         if (osMessageQueueGet(mid_log_queue, &rx, NULL, osWaitForever) == osOK)
         {
-            uint8_t msg_len = strlen(rx.msg);
-            uint32_t byte = 0;
+            uint32_t msg_len = (uint32_t)strlen(rx.msg);
+            if (msg_len == 0) continue;
 
-            while (byte < msg_len) {
-                int32_t res = Driver_USART1.Send(&rx.msg[byte], msg_len - byte);
-
-                if (res > 0) {
-                    byte += res;
-                }
-
-                if (byte < msg_len) {
-                    osSemaphoreAcquire(sid_log_sem, osWaitForever);
-                }
+            if (Driver_USART1.Send(rx.msg, msg_len) == ARM_DRIVER_OK) {
+                osSemaphoreAcquire(sid_log_sem, osWaitForever);
             }
         }
     }
@@ -68,7 +70,7 @@ void bsp_log_init(void) {
     mid_log_queue = osMessageQueueNew(QUEUE_SIZE, sizeof(log_packet_t), NULL);
     sid_log_sem = osSemaphoreNew(1, 0, NULL);
     const osThreadAttr_t task_attr = {
-        .name = "Logginf_Task",
+        .name = "Logging_Task",
         .priority = osPriorityLow,
         .stack_size = 512
     };
@@ -104,16 +106,16 @@ void bsp_log_init(void) {
 }
 
 void bsp_log_printf(const char *format, ...) {
-    log_packet_t temp;
+    if (!bsp_log_ready || (mid_log_queue == NULL)) {
+        return;
+    }
 
+    log_packet_t temp;
     va_list args;
     va_start(args, format);
     vsnprintf(temp.msg, LOG_MSG_LEN, format, args);
     va_end(args);
 
-    if (bsp_log_ready && (mid_log_queue != NULL) && (osMessageQueuePut(mid_log_queue, &temp, 0, 0) == osOK)) {
-        return;
-    }
-
-    BSP_LogSendDirect(temp.msg);
+    // Timeout = 0: Nếu Queue đầy, lập tức thoát ra, BỎ QUA dòng log này.
+    osMessageQueuePut(mid_log_queue, &temp, 0, 0); 
 }
